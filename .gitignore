@@ -9,3 +9,8 @@
 /Test/*.xmp
 /Test/*.mp4
 /Test/*.mpg
+/Intro/Particles/*.png
+/Outro/Artwork/*.png
+/Outro/Particles/*.psd
+/Outro/Source/Footage/*.mp4
+/Outro/Source/Footage/*.webm
