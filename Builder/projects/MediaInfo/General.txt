@@ -1,0 +1,3 @@
+ColumnsCount;2
+Column0;General;0;CompleteName;30
+Column1;General;0;Format;10

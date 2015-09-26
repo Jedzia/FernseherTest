@@ -1,0 +1,2 @@
+"Video;%DisplayAspectRatio%"
+"Audio;%Format%"

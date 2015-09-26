@@ -1,0 +1,474 @@
+
+-X-X-X-X- Sa, 26 Sep 2015 01:11:21 -----------------------------------------------------------
+01:09] <@Netztapir> tikz
+[01:09] <Jedzia> verdammt NEIN !
+[01:09] <Jedzia> mit audio hab ich die kleinsten probleme
+[01:10] <Jedzia> hehe gut, Netztapir. tikz ist klasse und ne super idee. -> fuer nen kreis und nen paar quadrate als testbild
+[01:10] <@Netztapir> dann mach halt lauter
+[01:10] <Jedzia> schreib ich mir auf fuer version 2.0
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 25 Sep 2015 21:44:14 -----------------------------------------------------------
+Check: maybe i can combine two steps at the end, when combining the videos ... all are mpeg ... don't reencode
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 25 Sep 2015 17:07:24 -----------------------------------------------------------
+Not every subtitle codec can be used for every video container format!
+
+[subtitle codec] parameter examples:
+for MKV containers: copy, ass, srt, ssa
+for MP4 containers: copy, mov_text
+for MOV containers: copy, mov_text
+
+Note:
+Many Philips Blu-Ray Players, Samsung Smart TV's and other standalone players can only read "SRT" subtitle streams in "MKV" files.
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 25 Sep 2015 02:15:25 -----------------------------------------------------------
+Dependencies between independent projects
+
+André Caron @ http://cmake.3232098.n2.nabble.com/Dependencies-between-independent-projects-td7511684.html
+https://github.com/AndreLouisCaron/cfcgi
+http://programmers.stackexchange.com/questions/114719/organizing-git-repositories-with-common-nested-sub-modules
+
+add_dependencies(myexe mylibrary) but for the ImageSequence project ?
+Todo: rename ImageSequence to VideoGenerator  (NO-> or GenerateVideo)
+Todo: Readme.md
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 25 Sep 2015 01:49:28 -----------------------------------------------------------
+Todo: more Formats
+https://en.wikipedia.org/wiki/Comparison_of_video_container_formats
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 25 Sep 2015 01:41:02 -----------------------------------------------------------
+http://sourceforge.net/p/npp-plugins/bugs/270/
+#270 XML tools 2.4.x place the caret always at position 0 while changing the active tab 
+
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 25 Sep 2015 01:00:33 -----------------------------------------------------------
+Q:\Projects\Video\FernseherTest\Builder\build2013x64\ImageSequence
+PATH=D:\Program Files\ffmpeg\bin;%PATH%
+ffmpeg -i subtitles.srt subtitles.ass
+ffmpeg -y -i "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264.mp4" -vf ass=subtitles.ass "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264_subbed.mp4"
+ffmpeg -y -i "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264.mp4" -vf ass=subtitles.ass "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264_subbed.mkv"
+
+ffmpeg -y -i "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264.mp4" -i subtitles.srt -v:c copy -a:c copy -s:c copy -map 0:0 -map 0:1 -map 1:0 "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264_subbed.mkv"
+
+alles copy nur srt in nativen ass
+ffmpeg -y -i "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264.mp4" -i test.srt -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 "X264 AAC 16t9 in 1280x720 25fps_mp4_libx264_subbed.mkv"
+
+https://en.wikibooks.org/wiki/FFMPEG_An_Intermediate_Guide/subtitle_options
+
+https://en.wikipedia.org/wiki/SubRip
+http://stackoverflow.com/questions/8672809/use-ffmpeg-to-add-text-subtitles
+http://superuser.com/questions/549590/ffmpeg-support-for-tx3g
+https://gpac.wp.mines-telecom.fr/home/
+
+drei versionen ... embedded, als videofilename.srt oder videofilename.ass
+Plain
+1
+00:00:10,500 --> 00:00:13,000
+Elephant's Dream
+
+2
+00:00:15,000 --> 00:00:18,000
+At the left we can see...
+
+With specific DVD rectangle positioning and styling
+1
+00:00:10,500 --> 00:00:13,000  X1:63 X2:223 Y1:43 Y2:58
+<i>Elephant's Dream</i>
+
+2
+00:00:15,000 --> 00:00:18,000  X1:53 X2:303 Y1:438 Y2:453
+<font color="cyan">At the left we can see...</font>
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Do, 24 Sep 2015 21:28:46 -----------------------------------------------------------
+good stuff saved @ D:\Users\Public\Videos
+
+[mxf @ 000000000229be80] -d10_channelcount requires MXF D-10 and will be ignored
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Mi, 23 Sep 2015 21:54:54 -----------------------------------------------------------
+testen:
+Q:\Projects\Video\FernseherTest\Builder\build2013x64\ImageSequence
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" "Plasma-X264 vo 16t9 in 720x576 25fps_mkv_libx264.tmp.mkv"
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Mi, 23 Sep 2015 20:44:27 -----------------------------------------------------------
+use STATIC versions
+D:\Program Files\ImageMagick-6.7.9-Q16
+D:\Program Files\ImageMagick-6.9.2-Q16-HDRI
+D:\Program Files\ImageMagick-7.0.0-Q16
+
+Q:\Projects\Video\FernseherTest\Builder\projects\ImageSequence
+"D:\Program Files\ImageMagick-7.0.0-Q16\convert.exe" Options05.psd[0] -layers merge -resize 10% Options05.png
+
+"D:\Program Files\ImageMagick-6.9.2-Q16-HDRI\convert.exe" Options05.psd -layers merge -resize 10% Options05.png
+
+bei Q:\Projects\Video\FernseherTest\Builder\projects\ImageSequence>set PATH="D:\Program Files\ImageMagick-7.0.0-Q16-HDRI" geht
+Q:\Projects\Video\FernseherTest\Builder\projects\ImageSequence>convert.exe Options01.psd[0] -coalesce -flatten  Options01.png
+
+convert.exe Options06.psd -flatten  Options06.png
+-----------------------------------------------------------------------------------------------
+
+
+
+-X-X-X-X- Mi, 23 Sep 2015 14:53:16 -----------------------------------------------------------
+[  1%] Convert Options01.psd Image to Options01.png.
+        cd Q:\Projects\Video\FernseherTest\Builder\build2013x64\ImageSequence
+        echo >nul && "D:\Program Files\ImageMagick-6.9.2-Q16\convert.exe" -layers merge "Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Options0
+1.psd" "Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Work//Options01.png" && touch Q:/Projects/Video/FernseherTest/Builder/projects/ImageSeque
+nce/Work/
+convert.exe: CompressionNotSupported '58589' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '53720' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '53702' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '50631' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '56290' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '60126' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '58593' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '59106' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '54227' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '47540' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: pixel cache allocation failed `Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Options01.psd' @ error/cache.c/OpenPixelCache/3559.
+convert.exe: CompressionNotSupported '56022' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: pixel cache allocation failed `Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Options01.psd' @ error/cache.c/OpenPixelCache/3559.
+convert.exe: CompressionNotSupported '52945' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: pixel cache allocation failed `Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Options01.psd' @ error/cache.c/OpenPixelCache/3559.
+convert.exe: CompressionNotSupported '56539' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: pixel cache allocation failed `Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Options01.psd' @ error/cache.c/OpenPixelCache/3559.
+convert.exe: CompressionNotSupported '49366' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '56538' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '52948' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '49863' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '56787' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '60139' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '45238' @ warning/psd.c/ReadPSDChannel/1115.
+convert.exe: CompressionNotSupported '41639' @ warning/psd.c/ReadPSDChannel/1115.
+NMAKE : fatal error U1077: 'echo' : return code '0x1'
+
+"D:\Program Files\ImageMagick-7.0.0-Q16\convert.exe" 
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Mi, 23 Sep 2015 21:32:35 -----------------------------------------------------------
+Open URLs dump:
+
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+video+from+image&btnG=Google+Search&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=hart+aber+fair+gendergap&btnG=Google+Search&gbv=1
+http://www.rp-online.de/panorama/fernsehen/hart-aber-fair-gender-talk-von-frank-plasberg-wieder-in-ard-mediathek-aid-1.5355774
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=cmake+random+value&btnG=Google+Search&gbv=1
+https://github.com/acmeism/RosettaCodeData/blob/master/Task/Random-number-generator--included-/CMake/random-number-generator--included-.cmake
+https://github.com/acmeism/RosettaCodeData
+http://www.cmake.org/Wiki/CMakeMacroListOperations
+http://www.google.de/search?q=%2Bcmake+sorting+a+lists&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.cmake.org/cmake/help/v3.0/command/list.html
+http://www.google.de/search?q=%2Bcmake+%2Bgerman+%2Bumlaut+%2B%22add_custom_command%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+https://duckduckgo.com/?q=%2Bcmake+%2Bumlaut+%2Badd_custom_command
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+MPEG+2+Video+-ac&btnG=Google+Search&gbv=1
+http://superuser.com/questions/835871/how-to-make-an-mpeg2-video-file-with-the-highest-quality-possible-using-ffmpeg
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=cmake+split+file&btnG=Google+Search&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=windows+command+line+split&btnG=Google+Search&gbv=1
+http://superuser.com/questions/80081/how-to-split-and-combine-files
+http://www.google.de/search?q=mediainfo+audio&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://manpages.ubuntu.com/manpages/precise/man1/mediainfo.1.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=mediainfo+template&btnG=Google+Search&gbv=1
+http://sourceforge.net/p/mediainfo/discussion/297610/thread/d89bcaff/
+http://www.wjunction.com/194-webmaster-discussion-archive/73506-do-you-have-custom-mediainfo-example.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=sed+split+file+with+marker&btnG=Google+Search&gbv=1
+http://sourceforge.net/p/mediainfo/code/HEAD/tree/
+http://sourceforge.net/p/mediainfo/code/HEAD/tree/MediaInfo/trunk/
+http://cmake.3232098.n2.nabble.com/CMake-Code-Beautifier-td7585309.html
+http://www.google.de/search?q=Source+Code+Beautifier+for+CMake&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://cmake.org/pipermail/cmake/2014-January/056903.html
+http://www.imagemagick.org/download/binaries/
+http://www.google.de/search?q=%2B%22ImageMagick-6.7.9-Q16%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.google.de/search?q=%22ImageMagick-6.7.9-Q16-x64-dll.exe%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=computer+management&btnG=Google+Search&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=attach+vhd&btnG=Google+Search&gbv=1
+http://www.sevenforums.com/tutorials/566-virtual-hard-disk-create-attach-vhd.html
+http://www.google.de/search?q=%2Bnpackd++%2Bshortcuts&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.google.de/search?q=%2Bconvert+%2BCompressionNotSupported+%2BPSD&hl=en-DE&biw&bih&gbv=1&sa=X&&as_q&nfpr=1&spell
+http://www.imagemagick.org/discourse-server/viewtopic.php?t=21935
+http://www.google.de/search?q=ImageMagick+convert+CompressionNotSupported+PSD&btnG=Search&hl=en-DE&biw=&bih=&gbv=1&nfpr=1&spell=
+http://www.imagemagick.org/discourse-server/viewtopic.php?t=28002
+file:///D:/Program%20Files/ImageMagick-7.0.0-Q16/index.html
+file:///D:/Program%20Files/ImageMagick-7.0.0-Q16/www/convert.html
+http://www.imagemagick.org/discourse-server/viewtopic.php?t=23313
+http://www.google.de/search?q=%2BImageMagick+%2BHDRI&btnG=Search&hl=en-DE&biw=&bih=&gbv=1&nfpr=1&spell=
+http://www.imagemagick.org/script/high-dynamic-range.php
+http://www.imagemagick.org/discourse-server/viewtopic.php?t=9851
+-----------------------------------------------------------------------------------------------
+
+
+-X-X-X-X- Di, 22 Sep 2015 14:34:25 -----------------------------------------------------------
+E:\Shared\Musi\Taylor Swift Red-2012>
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" 15-taylor_swift-starlight.mp3 --Help-Output
+--Output=...  Specify a template (BETA)
+Usage: "MediaInfo --Output=[xxx;]Text FileName"
+
+xxx can be: General, Video, Audio, Text, Chapter, Image, Menu
+Text can be the template text, or a filename
+     Filename must be in the form file://filename
+
+See --Info-Parameters for available parameters in the text
+(Parameters must be surrounded by "%" sign)
+
+Example: "MediaInfo --Output=Video;%AspectRatio% FileName"
+
+Example: "MediaInfo --Output=Video;file://Video.txt FileName"
+and Video.txt contains
+"%DisplayAspectRatio%"        for Video Aspect Ratio.
+
+Example: "MediaInfo --Output=file://Text.txt FileName"
+and Text.txt contains
+"Video;%DisplayAspectRatio%"  for Video Aspect Ratio.
+"Audio;%Format%"              for Audio Format.
+
+
+Q:\Projects\Video\FernseherTest\Builder\build2013x64\ImageSequence
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" --Output=Audio "Plasma-XVid 16t9 in 720x576 30fps_mp4_libxvid.tmp.mp4"
+
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" --Output=file://Q:/Projects/Video/FernseherTest/Builder/projects/MediaInfo/Video.txt "Plasma-XVid 16t9 in 720x576 30fps_mp4_libxvid.tmp.mp4"
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" --Output=file:///Q:/Projects/Video/FernseherTest/Builder/projects/MediaInfo/Video.txt "Plasma-X264 vo 16t9 in 720x576 25fps_mkv_libx264.tmp.mkv"
+
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" "Plasma-X264 vo 16t9 in 720x576 25fps_mkv_libx264.tmp.mkv" --Output=Video;%AspectRatio%
+"Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo\MediaInfo.exe" "Plasma-X264 vo 16t9 in 720x576 25fps_mkv_libx264.tmp.mkv" --Output=file://Video.txt
+
+
+
+
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Mi, 23 Sep 2015 05:33:27 -----------------------------------------------------------
+
+MediaInfo Folders:
+Q:\Projects\Video\FernseherTest\Builder\projects\build\MediaInfo
+E:\Projects\C++\mediainfo\MediaInfo\Source\CLI
+D:\Program Files\MediaInfo\Plugin\Sheet
+Q:\Video
+D:\Users\Jedzia.pubsiX\AppData\Roaming
+E:\Projects\C++\mediainfo\MediaInfo\Source\GUI\Qt
+
+Sheet data is in D:\Program Files\MediaInfo\Plugin\Sheet
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Di, 22 Sep 2015 03:57:48 -----------------------------------------------------------
+Katzenvideo !
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 18 Sep 2015 22:54:19 -----------------------------------------------------------
+ffmpeg -y -i out3.mp4 -vf drawtext="fontfile=SEGA.TTF: text='Stack Overflow': fontcolor=white: fontsize=24: box=1: boxcolor=black: x=(w-text_w)/2: y=(h-text_h-line_h)/2" -codec:a copy output.mp4
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 18 Sep 2015 20:22:12 -----------------------------------------------------------
+"D:/Program Files/ImageMagick-6.7.9-Q16/mogrify.exe" -resize 1280x720 -path Q:/Projects/Video/FernseherTest/Builder/build2013x64/ImageSequence Q:/Projects/Video/FernseherTest/Builder/projects/ImageSequence/Work/*.png
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 18 Sep 2015 20:05:45 -----------------------------------------------------------
+set VERBOSE=1
+nmake
+-----------------------------------------------------------------------------------------------
+
+-X-X-X-X- Fr, 18 Sep 2015 19:05:18 -----------------------------------------------------------
+Q:\Projects\Video\FernseherTest\Builder\build2013x64
+
+ffmpeg -framerate 1/5 -i "../projects/ImageSequence/Work/Options%02d.png" -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+
+ffmpeg -framerate 1/5 -i "../projects/ImageSequence/Work/Options%02d.png" -c:v libx264 -r 30 -pix_fmt yuv420p -vf scale=320:240 out.mp4
+
+Image muss gleich gross sein
+ffmpeg -y -framerate 1/5 -i "../projects/ImageSequence/Work/Options%02d.png" -c:v libx264 -r 30 -pix_fmt yuv420p -vf scale=800:600 out.mp4
+
+
+cat "../projects/ImageSequence/Work/*.png" | ffmpeg -f image2pipe -c:v libx264 -r 30 -pix_fmt yuv420p -vf scale=800:600 out2.mp4
+cat ../projects/ImageSequence/Work/Op*.png | ffmpeg -y -f image2pipe -c:v libx264 -r 30 -pix_fmt yuv420p -vf scale=800:600 out2.mp4
+cat ../projects/ImageSequence/Work/Op* | ffmpeg -y -f image2pipe -c:v libx264 -r 30 -pix_fmt yuv420p -vf scale=800:600 out2.mp4
+
+cat ../projects/ImageSequence/Work/Op* | ffmpeg -y -framerate 1/5 -f image2pipe  -vcodec png -i - -vcodec libx264 out3.mp4
+
+cat ../projects/ImageSequence/Work/Op* | ffmpeg -y -framerate 1/5 -f image2pipe  -vcodec png -i - -vf scale=1280:720 -vcodec libx264 -r 30 out3.mp4
+
+-pix_fmt yuv420p
+
+mogrify -resize 800x800 ../projects/ImageSequence/Work/footer_2.png
+
+mogrify -resize 1280x720 -path . ../projects/ImageSequence/Work/footer_2.png
+-----------------------------------------------------------------------------------------------
+
+
+-X-X-X-X- Di, 22 Sep 2015 01:49:45 -----------------------------------------------------------
+Open URLs dump:
+
+http://www.google.de/search?q=ffmpeg+aspect&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://stackoverflow.com/questions/24087249/ffmpeg-change-resolution-of-the-video-with-aspect-ratio
+https://ffmpeg.org/pipermail/ffmpeg-user/2013-January/012355.html
+https://trac.ffmpeg.org/wiki/Scaling%20(resizing)%20with%20ffmpeg
+https://de.wikipedia.org/wiki/Hummus
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=fisi+bubele&btnG=Google+Search&gbv=1
+https://en.wikipedia.org/wiki/Special:Search?search=Fizzy+Bubbele&go=Go
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpgeg+4%3A3+crop&btnG=Google+Search&gbv=1
+http://superuser.com/questions/343951/how-can-i-crop-a-169-video-to-43-cutting-off-the-edges
+http://www.vtk.org/Wiki/CMake/Examples
+http://www.cmake.org/cmake/help/v3.0/command/string.html
+http://www.google.de/search?q=cmake+string+%2BMATCHES+&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://stackoverflow.com/questions/28532444/cmake-string-token-inclusion-check
+http://stackoverflow.com/questions/15573655/cmake-regex-match-directories-in-list
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+colon+in+drawtext&btnG=Google+Search&gbv=1
+http://stackoverflow.com/questions/10725225/ffmpeg-single-quote-in-drawtext
+http://stackoverflow.com/questions/8103808/ffmpeg-drawtext-could-not-load-fontface-from-file
+https://de.wikipedia.org/wiki/4K2K
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+silent&btnG=Google+Search&gbv=1
+http://superuser.com/questions/326629/how-can-i-make-ffmpeg-be-quieter-less-verbose
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=photoshop+show+title+safe+area&btnG=Google+Search&gbv=1
+http://www.dvxuser.com/V6/showthread.php?94691-Safe-Title-Action-Area-in-Photoshop-CS2
+http://www.dvinfo.net/forum/non-linear-editing-pc/81835-photoshop-safe-areas-template.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=photoshop+import+guides&btnG=Google+Search&gbv=1
+http://graphicdesign.stackexchange.com/questions/1577/is-there-a-way-to-copy-guides-from-one-photoshop-document-to-another
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=5120x2880&btnG=Google+Search&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=cmake+foreach&btnG=Google+Search&gbv=1
+http://www.cmake.org/cmake/help/v3.0/command/foreach.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=image+magick+convert&btnG=Google+Search&gbv=1
+http://www.imagemagick.org/script/convert.php
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=cmake+file+name+without+path&btnG=Google+Search&gbv=1
+http://www.cmake.org/cmake/help/v3.0/command/get_filename_component.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+add+empty+audio&btnG=Google+Search&gbv=1
+http://stackoverflow.com/questions/12368151/adding-silent-audio-to-mov-in-ffmpeg
+http://ffmpeg.org/ffmpeg-filters.html#anullsrc
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=anullsrc&btnG=Google+Search&gbv=1
+http://stackoverflow.com/questions/12368151/adding-silent-audio-to-mov-in-ffmpeg
+http://www.google.de/search?q=ffmpeg+%22-map%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+https://trac.ffmpeg.org/wiki/How%20to%20use%20-map%20option
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+concat+audio+&btnG=Google+Search&gbv=1
+http://superuser.com/questions/587511/concatenate-multiple-wav-files-using-single-command-without-extra-file
+https://trac.ffmpeg.org/wiki/Concatenate
+
+
+Open URLs dump:
+
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+video+from+image&btnG=Google+Search&gbv=1
+https://trac.ffmpeg.org/wiki/Create%20a%20video%20slideshow%20from%20images
+http://bytes.com/topic/perl/answers/736967-overwrite-file-without-asking
+https://trac.ffmpeg.org/wiki/Scaling%20(resizing)%20with%20ffmpeg
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+video+from+image&btnG=Google+Search&gbv=1
+http://hamelot.co.uk/visualization/using-ffmpeg-to-convert-a-set-of-images-into-a-video/
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+%22-i%22&btnG=Google+Search&gbv=1
+https://ffmpeg.org/ffmpeg.html#Main-options
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+image+to+video&btnG=Google+Search&gbv=1
+http://www.itforeveryone.co.uk/image-to-video.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+input+from+file&btnG=Google+Search&gbv=1
+http://superuser.com/questions/666860/clarification-for-ffmpeg-input-option-with-image-files-as-input
+http://ffmpeg-users.933282.n4.nabble.com/Use-list-of-files-as-input-for-ffmpeg-td940933.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+image2pipe+&btnG=Google+Search&gbv=1
+http://ffmpeg.gusari.org/viewtopic.php?f=25&t=39
+http://www.cmake.org/cmake/help/v3.2/command/add_custom_command.html
+http://www.google.de/search?q=cmake+ADD_CUSTOM_COMMAND+example&hl=en-DE&biw=&bih=&gbv=1&sa=X&as_q=&nfpr=&spell=1&ved=0CBEQvwVqFQoTCPDAtv2TgcgCFer8cgodGxEKyg
+http://stackoverflow.com/questions/13470499/cmake-add-custom-command-with-dependencies-from-a-different-directory
+http://stackoverflow.com/questions/11592098/use-cmake-add-custom-command-to-generate-source-for-another-target
+http://stackoverflow.com/questions/14304480/batch-resize-images-and-output-images-to-new-folder-with-imagemagick
+http://www.google.de/search?q=mogrify+resize&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.imagemagick.org/Usage/resize/
+http://www.graphicsmagick.org/mogrify.html
+http://www.graphicsmagick.org/GraphicsMagick.html#details-border
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=mogrify+resize+with+borders&btnG=Google+Search&gbv=1
+http://stackoverflow.com/questions/12433300/imagemagick-how-to-resize-proportionally-with-mogrify-without-a-background
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+text&btnG=Google+Search&gbv=1
+http://stackoverflow.com/questions/17623676/text-on-video-ffmpeg
+https://sites.google.com/a/asu.edu/wireless-video-sensor/video/how-to-setup-full-ffmpeg-tools-in-ubuntu-11-10/useful-ffmpeg-commands
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=youtube+ich+kann+deine+votze+riechen&btnG=Google+Search&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+drawtext+transparent&btnG=Google+Search&gbv=1
+http://video.stackexchange.com/questions/15551/ffmpeg-drawtext-filter-create-transparent-background-with-text
+http://www.google.de/search?q=ffmpeg+fontfile+path&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://stackoverflow.com/questions/8103808/ffmpeg-drawtext-could-not-load-fontface-from-file
+https://magnesjaastad.wordpress.com/2012/05/06/search-and-replace-using-cmake/
+http://www.cmake.org/cmake/help/v3.0/command/string.html
+http://www.cmake.org/cmake/help/v3.0/command/function.html
+http://www.google.de/search?q=CMake+FUNCTION&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://stackoverflow.com/questions/14375519/cmake-how-to-write-a-nice-function-that-passes-variables-by-reference
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=CMAke+Argument+not+separated+from+preceding+token+by+whitespace.&btnG=Google+Search&gbv=1
+http://www.cmake.org/pipermail/cmake/2014-September/058467.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+drawbox&btnG=Google+Search&gbv=1
+https://ffmpeg.org/ffmpeg-filters.html#Examples-35
+http://stackoverflow.com/questions/7979585/drawtext-drawbox-or-overlay-on-only-a-single-frame-using-ffmpeg
+http://stackoverflow.com/questions/17339841/ffmpeg-drawbox-on-a-given-frame
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=drawbox%3Dy%3Dih%2FPHI&btnG=Google+Search&gbv=1
+https://gist.github.com/J0N47H4N/a91a004ed128f7b12110
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+drawbox+t%3Dmax+error&btnG=Google+Search&gbv=1
+http://ffmpeg.zeranoe.com/builds/
+http://stackoverflow.com/questions/9870162/avoid-quoting-in-cmake-add-custom-command
+http://www.cmake.org/cmake/help/v3.0/search.html?q=SET&check_keywords=yes&area=default
+http://www.cmake.org/cmake/help/v3.0/command/list.html?highlight=lists
+http://www.google.de/search?q=cmake+remove+quotes&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.cmake.org/pipermail/cmake/2012-July/051207.html
+http://www.google.de/search?q=CMAKE+command+STOP+quoting&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.cmake.org/cmake/help/v3.1/command/separate_arguments.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+xvid&btnG=Google+Search&gbv=1
+https://trac.ffmpeg.org/wiki/Encode/MPEG-4
+http://www.google.de/search?q=%2Bcmake+set+%2B%22empty+string%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.cmake.org/cmake/help/v3.0/command/string.html
+http://www.google.de/search?q=ffmpeg+encode+divx&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+https://trac.ffmpeg.org/wiki/Encode/MPEG-4
+http://www.cmake.org/cmake/help/v3.0/command/add_custom_target.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=cmake+custom+target+depends&btnG=Google+Search&gbv=1
+http://www.google.de/search?q=cmake+add_custom_command+OUTPUT+list+of+files&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://public.kitware.com/pipermail/cmake/2013-August/055427.html
+http://www.google.de/search?q=cmake+string+replace+list&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.cmake.org/pipermail/cmake/2007-August/015580.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+textfile+to+video&btnG=Google+Search&gbv=1
+http://superuser.com/questions/874598/creating-video-containing-animated-text-using-ffmpeg-alone
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=free+console+font&btnG=Google+Search&gbv=1
+http://hivelogic.com/articles/top-10-programming-fonts
+http://mediaarea.net/en/MediaInfo/Download/Windows
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=mediainfo+command+line+options&btnG=Google+Search&gbv=1
+http://superuser.com/questions/597626/windows-get-duration-of-video-file-from-command-line
+http://forum.doom9.org/archive/index.php/t-139739.html
+http://sourceforge.net/p/mediainfo/discussion/297610/thread/a6778a7a/
+http://www.wjunction.com/16-webmaster-discussion/73506-do-you-have-custom-mediainfo-example.html
+https://translate.google.com/#auto/de/height
+http://www.cmake.org/cmake/help/v3.0/command/if.html
+http://www.google.de/search?q=cmake+if+less+integer+example&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.cmake.org/Wiki/CMake/Language_Syntax
+http://www.cmake.org/pipermail/cmake/2012-March/049523.html
+http://www.cmake.org/cmake/help/v3.0/command/math.html
+http://www.google.de/search?q=CMake+math+round&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+bitrate&btnG=Google+Search&gbv=1
+http://superuser.com/questions/319542/how-to-specify-audio-and-video-bitrate
+http://www.google.de/search?q=%2Bffmpeg+%2Bdrawtext+%2B%22Anti-aliasing%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1&nfpr=&spell=1
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=testbild&btnG=Google+Search&gbv=1
+http://www.badische-zeitung.de/kultur-sonstige/erinnern-sie-sich-noch-an-das-testbild--63133581.html
+http://ais.badische-zeitung.de/piece/03/c3/57/84/63133572.jpg
+https://de.wikipedia.org/wiki/4K2K
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+encoder&btnG=Google+Search&gbv=1
+https://www.ffmpeg.org/ffmpeg-codecs.html#Video-Encoders
+https://www.ffmpeg.org/ffmpeg-codecs.html#libvorbis
+https://www.ffmpeg.org/ffmpeg-codecs.html#libkvazaar
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=cmake+foreach&btnG=Google+Search&gbv=1
+http://www.cmake.org/cmake/help/v3.0/command/foreach.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+concatenate+videos&btnG=Google+Search&gbv=1
+https://trac.ffmpeg.org/wiki/Concatenate
+https://ffmpeg.org/faq.html#How-can-I-concatenate-video-files_003f
+http://www.cmake.org/Wiki/CMake/Tutorials/Exporting_and_Importing_Targets
+http://www.google.de/search?q=cmake+generate+text+file&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://cmake.3232098.n2.nabble.com/How-to-use-file-WRITE-to-write-the-literal-string-r-to-a-file-td7582234.html
+http://www.cmake.org/cmake/help/v3.0/command/file.html
+http://www.cmake.org/pipermail/cmake/2003-June/003953.html
+http://cmake.3232098.n2.nabble.com/How-to-not-delete-generated-files-on-make-clean-td4425991.html
+http://www.google.de/search?q=cmake+exclude+target+from+clean&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://cmake.3232098.n2.nabble.com/How-to-not-delete-generated-files-on-make-clean-td4425991.html
+http://www.google.de/search?q=adobe+illustrator+testbild&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+https://de.fotolia.com/id/42941634
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=Monitor+Kalibrierung+svg&btnG=Google+Search&gbv=1
+https://de.wikipedia.org/wiki/Testbild
+https://en.wikipedia.org/wiki/Testcard
+http://www.google.de/search?q=Testcard+vector&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+http://all-free-download.com/free-vector/test-card-tv.html
+http://all-free-download.com/free-vector/download/the_david_portrait_black_and_white_and_red_vector_illustration_179789_download.html
+http://www.google.de/search?hl=en-DE&source=hp&biw=&bih=&q=ffmpeg+mp4&btnG=Google+Search&gbv=1
+https://trac.ffmpeg.org/wiki/Encode/H.264
+http://andrebluehs.net/blog/converting-avi-to-mp4-with-ffmpeg/
+http://www.google.de/search?q=ffmpeg+%22-c%3Aa%22&btnG=Search&hl=en-DE&biw=&bih=&gbv=1
+https://trac.ffmpeg.org/wiki/Encode/AAC
+http://ww
+-----------------------------------------------------------------------------------------------
