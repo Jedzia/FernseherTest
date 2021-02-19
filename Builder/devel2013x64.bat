@@ -12,7 +12,7 @@ call %~dp0%config\config.bat
 call "%DXSDK_DIR%\Utilities\Bin\dx_setenv.cmd"
 cd "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\"
 call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
-set PATH=C:\Program Files\Git\usr\bin;D:\Program Files\ffmpeg\ffmpeg2015\bin;E:\Devel\CPP\Libs\QT4\bin;D:\Program Files (x86)\ActivePerl_64_bit\Perl64\site\bin;D:\Program Files (x86)\ActivePerl_64_bit\Perl64\bin;%PATH%;
+set PATH=C:\Program Files\Git\usr\bin;D:\Program Files\ffmpeg\bin;E:\Devel\CPP\Libs\QT4\bin;D:\Program Files (x86)\ActivePerl_64_bit\Perl64\site\bin;D:\Program Files (x86)\ActivePerl_64_bit\Perl64\bin;%PATH%;
 REM FFMPEG in Path already
 REM set PATH=C:\Program Files\Git\usr\bin;E:\Devel\CPP\Libs\QT4\bin;D:\Program Files (x86)\ActivePerl_64_bit\Perl64\site\bin;D:\Program Files (x86)\ActivePerl_64_bit\Perl64\bin;%PATH%;
 if "%PLATFORM%" == "X64" (

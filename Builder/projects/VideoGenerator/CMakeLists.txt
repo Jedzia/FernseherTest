@@ -245,8 +245,8 @@ SET(EXTENSION ${pEXTENSION}.mpg)
 SET(VCodec mpeg2video)
 SET(Aspect ${pAspect})
 SET(Extra_Args ${pExtra_Args})
-#SET(AAC_CODEC aac)
-SET(AAC_CODEC libvo_aacenc)
+SET(AAC_CODEC aac)
+#SET(AAC_CODEC libvo_aacenc)
 
 # Text band Title Setup
 SET(Title "${pTitle} ${pAspect} in ${pWIDTH}x${pHEIGTH} ${pFPS}fps") 
@@ -330,8 +330,9 @@ add_custom_command(
   OUTPUT ${FontOverlayVideo_OUT}
   COMMAND ffmpeg -y -i ${GenVideo_OUT} -vf \"${ff_box}, ${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${FontOverlayVideo_OUT}
   DEPENDS ${GenVideo_OUT}
+  COMMENT Build overlay text video
 )
-ADD_CUSTOM_TARGET(FontOverlayVideo${TTarget} ALL DEPENDS ${GenVideo${TTarget}} ${GenVideo_OUT} ${FontOverlayVideo_OUT})
+ADD_CUSTOM_TARGET(FontOverlayVideo${TTarget} ALL DEPENDS ${GenVideo${TTarget}} ${GenVideo_OUT} ${FontOverlayVideo_OUT} COMMENT "Building FontOverlayVideo for ${TTarget}")
 
 ### fix Plasma Dimensions, generate real info for MediaInfo
 SET(PlasmaFname ${PROJECT_SOURCE_DIR}/Videos/Plasma3.mp4)
@@ -454,7 +455,7 @@ if(PERL_FOUND)
 else()
 	### add a text page, remember to remove "Stream size  : 174 KiB (98%)"
 	MESSAGE(WARN "[IMGCONV-LIST] PERL NOT FOUND! Falling back to Simple Overlay GENERATOR")
-	fix_ffmpeg_path("${PROJECT_SOURCE_DIR}/Fonts/CONSOLA.TTF" Font)
+	fix_ffmpeg_path("${PROJECT_SOURCE_DIR}/Fonts/CONSOLA.TTF" Font)	
 	SET(TextFileName ${FontOverlayTEXT_OUT})
 	fix_ffmpeg_path("${TextFileName}" TextFile)
 	set(ff_text "drawtext=fontfile='${Font}':textfile='${TextFile}':fontcolor=black:fontsize=${Fontsize}:y=2:x=10")
@@ -470,7 +471,7 @@ endif()
 
 
 ### fix Intro Dimensions
-SET(IntroFname ${PROJECT_SOURCE_DIR}/Videos/Intro01.mp4)
+SET(IntroFname ${PROJECT_SOURCE_DIR}/Videos/Intro01woAudio.mp4)
 SET(IntroVideo_OUTfname "Intro-${VIDEO_TARGET}.${EXTENSION}")
 add_custom_command(
   OUTPUT ${IntroVideo_OUTfname}
@@ -510,7 +511,7 @@ add_custom_command(
   OUTPUT ${VideoConcatVideo_OUT2}
   # This only works with some formats (MPEG-1, MPEG-2 PS, DV). 
   # see https://ffmpeg.org/faq.html#toc-Concatenating-using-the-concat-protocol-_0028file-level_0029
-  COMMAND ffmpeg -y -f concat -safe 0 -i ${VideoConcatTEXT_OUT} -c:v copy -an -movflags +faststart ${VideoConcatVideo_OUT2}
+  COMMAND ffmpeg -y -f concat -safe 0 -analyzeduration 2147483647 -probesize 2147483647 -i ${VideoConcatTEXT_OUT} -c:v copy -an -movflags +faststart ${VideoConcatVideo_OUT2}
   DEPENDS ${FontOverlayVideo2_OUT} ${PROJECT_BINARY_DIR}/${VideoConcatTEXT_OUT} ${IntroVideo_OUTfname} ${OutroVideo_OUTfname} ${GenVideo_OUT}
 )
 ADD_CUSTOM_TARGET(VideoConcatVideo2${TTarget} ALL DEPENDS ${VideoConcatVideo_OUT2})
@@ -535,6 +536,7 @@ if(pEXTENSION MATCHES "mkv")
 #	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 ${VideoConcatVideo_SRT}
 	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy ${VideoConcatVideo_SRT}
 	  DEPENDS ${VideoConcatVideo_OUT} ${Video_SUBTITLE} 
+	  COMMENT Building final Video
 	)
 	ADD_CUSTOM_TARGET(VideoConcatVideoSRT${TTarget} ALL DEPENDS ${VideoConcatVideo_SRT})
 elseif(pEXTENSION MATCHES "mp4" OR pEXTENSION MATCHES "mov")
@@ -544,6 +546,7 @@ elseif(pEXTENSION MATCHES "mp4" OR pEXTENSION MATCHES "mov")
 #	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 ${VideoConcatVideo_SRT}
 	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -map 0:v -map 0:a -c copy -map 1 -c:s:0 mov_text -metadata:s:s:0  language=en ${VideoConcatVideo_SRT}
 	  DEPENDS ${VideoConcatVideo_OUT} ${Video_SUBTITLE} 
+	  COMMENT Building final Video
 	)
 	ADD_CUSTOM_TARGET(VideoConcatVideoSRT${TTarget} ALL DEPENDS ${VideoConcatVideo_SRT})
 endif()
@@ -576,12 +579,13 @@ foreach(Container mkv)
 #	foreach(LIB libx264 libxvid mpeg4)
 	foreach(LIB libx264)
 #		foreach(AUDIO ${AAC_CODEC} libmp3lame)
-		foreach(AUDIO libvo_aacenc)
+		foreach(AUDIO ac3)
 #			foreach(RESOLUTION "720;576" "1280;720")
 			foreach(RESOLUTION "1280;720")
 #				foreach(FPS 25 30 50 60)
 				foreach(FPS 30 )
-					foreach(Aspect "16:9" "4:3")
+#					foreach(Aspect "16:9" "4:3")
+					foreach(Aspect "16:9")
 		#				#build_intro_video("X264"          ${FPS} 720  576  mkv libx264 16:9 ${NULL})
 		#				#build_intro_video("X264"          ${FPS} ${RESOLUTION}  mkv libx264 16:9 ${NULL})
 #						build_intro_video("${LIB} ${AUDIO}"          ${FPS} ${RESOLUTION}  ${Container} ${LIB} ${Aspect} ${AUDIO} ${NULL})
