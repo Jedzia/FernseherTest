@@ -245,6 +245,8 @@ SET(EXTENSION ${pEXTENSION}.mpg)
 SET(VCodec mpeg2video)
 SET(Aspect ${pAspect})
 SET(Extra_Args ${pExtra_Args})
+#SET(AAC_CODEC aac)
+SET(AAC_CODEC libvo_aacenc)
 
 # Text band Title Setup
 SET(Title "${pTitle} ${pAspect} in ${pWIDTH}x${pHEIGTH} ${pFPS}fps") 
@@ -276,7 +278,7 @@ SET(vAspect -aspect ${pAspect})
 
 # Audio Setup
 #SET(AUDIO -c:a copy)
-#SET(AUDIO "-c:a aac -b:a 128k")
+#SET(AUDIO "-c:a ${AAC_CODEC} -b:a 128k")
 SET(Audio "-shortest -c:a ${pAudio} -b:a 128k")
 if( ${pAudio} STREQUAL "${NULL}")
 	SET(Audio "-an")
@@ -551,8 +553,8 @@ endif()
 #SET(VideoConcatVideo2_OUT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}X.${pEXTENSION}")
 #add_custom_command(
 #  OUTPUT ${VideoConcatVideo2_OUT}
-###  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v ${VCodec} ${Extra_Args} ${BITRATE} -c:a aac ${VideoConcatVideo2_OUT}
-#  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v copy -shortest -c:a aac ${VideoConcatVideo2_OUT}
+###  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v ${VCodec} ${Extra_Args} ${BITRATE} -c:a ${AAC_CODEC} ${VideoConcatVideo2_OUT}
+#  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v copy -shortest -c:a ${AAC_CODEC} ${VideoConcatVideo2_OUT}
 #  DEPENDS ${VideoConcatVideo_OUT}
 #)
 #ADD_CUSTOM_TARGET(VideoConcatVideoX${TTarget} ALL DEPENDS ${VideoConcatVideo2_OUT})
@@ -573,8 +575,8 @@ if(TRUE)
 foreach(Container mkv)
 #	foreach(LIB libx264 libxvid mpeg4)
 	foreach(LIB libx264)
-#		foreach(AUDIO aac libmp3lame)
-		foreach(AUDIO aac)
+#		foreach(AUDIO ${AAC_CODEC} libmp3lame)
+		foreach(AUDIO libvo_aacenc)
 #			foreach(RESOLUTION "720;576" "1280;720")
 			foreach(RESOLUTION "1280;720")
 #				foreach(FPS 25 30 50 60)
@@ -592,72 +594,72 @@ foreach(Container mkv)
 endforeach(Container)
 endif()
 
-#build_intro_video("libtheora"          60 1280 720  avi libtheora 16:9 aac ${NULL})
-#build_intro_video("libvpx"          60 1280 720  avi libvpx 16:9 aac ${NULL})
-#build_intro_video("libvpx webm"          60 1280 720  webm libvpx 16:9 aac ${NULL})
-#build_intro_video("libx265 exp"          25 1280 720  mkv libx265 16:9 aac "-strict experimental")
-#build_intro_video("prores"          25 1280 720  mkv prores 16:9 aac ${NULL})
+#build_intro_video("libtheora"          60 1280 720  avi libtheora 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("libvpx"          60 1280 720  avi libvpx 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("libvpx webm"          60 1280 720  webm libvpx 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("libx265 exp"          25 1280 720  mkv libx265 16:9 ${AAC_CODEC} "-strict experimental")
+#build_intro_video("prores"          25 1280 720  mkv prores 16:9 ${AAC_CODEC} ${NULL})
 #build_intro_video("MPEG 1 Video"          25 1280 720  mpeg mpeg1video 16:9 libmp3lame ${NULL})
-#build_intro_video("Theora"          25 1280 720  avi libtheora 16:9 aac ${NULL})
+#build_intro_video("Theora"          25 1280 720  avi libtheora 16:9 ${AAC_CODEC} ${NULL})
 
 if(TRUE)
 #build_intro_video("X264"          25 720  576  mkv libx264 16:9 ${NULL} ${NULL})
-#build_intro_video("X264 AAC"       25 720  576  mkv libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          25 720  576  mkv libx264 4:3 aac ${NULL})
-#build_intro_video("X264"          25 1280 720  mkv libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          30 720  576  mkv libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          30 1280 720  mkv libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          30 1920 1080 mp4 libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          50 1920 1080 mp4 libx264 16:9 aac ${NULL})
+#build_intro_video("X264 AAC"       25 720  576  mkv libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          25 720  576  mkv libx264 4:3 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          25 1280 720  mkv libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          30 720  576  mkv libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          30 1280 720  mkv libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          30 1920 1080 mp4 libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          50 1920 1080 mp4 libx264 16:9 ${AAC_CODEC} ${NULL})
 
 #build_intro_video("MXF"       25 720   576  mxf mpeg2video 4:3 pcm_s16le "-ar 48000 -ac 2")
 #build_intro_video("MXF"       25 1280  720  mxf mpeg2video 16:9 pcm_s16le "-ar 48000 -ac 2")
 #build_intro_video("MXF"       25 1920  1080 mxf mpeg2video 16:9 pcm_s16le "-ar 48000 -ac 2")
 
 #
-##build_intro_video("X264"          30 720  576  mp4 libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          30 1024 768  mp4 libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          30 1280 720  mp4 libx264 16:9 aac ${NULL})
-#build_intro_video("X264"          30 1280 720  mp4 libx264 4:3 aac ${NULL})
+##build_intro_video("X264"          30 720  576  mp4 libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          30 1024 768  mp4 libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          30 1280 720  mp4 libx264 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"          30 1280 720  mp4 libx264 4:3 ${AAC_CODEC} ${NULL})
 #
-#build_intro_video("XVid"           30 720 576 mp4 libxvid 16:9 aac ${NULL})
-#build_intro_video("XVid"           30 1280 720 mp4 libxvid 16:9 aac ${NULL})
-#build_intro_video("XVid variable"  30 1280 720 mp4 libxvid 16:9 aac "-qscale:v 3")
+#build_intro_video("XVid"           30 720 576 mp4 libxvid 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("XVid"           30 1280 720 mp4 libxvid 16:9 ${AAC_CODEC} ${NULL})
+#build_intro_video("XVid variable"  30 1280 720 mp4 libxvid 16:9 ${AAC_CODEC} "-qscale:v 3")
 #
-#build_intro_video("mpeg4 native"   30 1280 720 avi mpeg4 16:9 aac ${NULL})
+#build_intro_video("mpeg4 native"   30 1280 720 avi mpeg4 16:9 ${AAC_CODEC} ${NULL})
 #
-##build_intro_video("MPEG 2 Video"   30 720 576 mpg mpeg2video 16:9 aac ${NULL})
+##build_intro_video("MPEG 2 Video"   30 720 576 mpg mpeg2video 16:9 ${AAC_CODEC} ${NULL})
 #build_intro_video("MPEG 2 Video"   30 720 576 mpg mpeg2video 16:9 libmp3lame ${NULL})
-#build_intro_video("MPEG 2 Video"   30 1280 720 mpg mpeg2video 16:9 aac ${NULL})
+#build_intro_video("MPEG 2 Video"   30 1280 720 mpg mpeg2video 16:9 ${AAC_CODEC} ${NULL})
 #build_intro_video("MPEG 2 Video"   30 720 576 m2v mpeg2video 16:9 libmp3lame ${NULL})
 endif()
 
-#build_intro_video("X264"          25 800  600  mkv libx264 4:3 aac ${NULL})
-#build_intro_video("X264"           30 4096 2160 mp4 libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          25 800  600  mkv libx264 4:3 ${AAC_CODEC} ${NULL})
+#build_intro_video("X264"           30 4096 2160 mp4 libx264 16:9 ${AAC_CODEC} ${NULL})
 
-# libvo_aacenc is obsolete, old and lower quality. use the build in aac codec.
+# libvo_aacenc is obsolete, old and lower quality. use the build in ${AAC_CODEC} codec.
 #common formats
 if(FALSE)
 build_intro_video("XVid var"       30 1280  720  mp4 libxvid    16:9 libmp3lame   "-qscale:v 3")
 build_intro_video("XVid var"       30 1280  720  mkv libxvid    16:9 libmp3lame   "-qscale:v 3")
 
-#build_intro_video("X264 AAC"       25 720   576  mkv libx264    4:3  aac ${NULL})
+#build_intro_video("X264 AAC"       25 720   576  mkv libx264    4:3  ${AAC_CODEC} ${NULL})
 # " Unsupported audio codec. Must be one of mp1, mp2, mp3, 16-bit pcm_dvd, pcm_s16be, ac3 or dts." -> build_intro_video("X264 AAC"       25 1280  720  mkv libx264    16:9 aac ${NULL})
 build_intro_video("X264 AAC"       25 1280  720  mkv libx264    16:9 ac3 ${NULL})
 
-#build_intro_video("X264 AAC"       25 1280  720  mp4 libx264    16:9 aac ${NULL})
+#build_intro_video("X264 AAC"       25 1280  720  mp4 libx264    16:9 ${AAC_CODEC} ${NULL})
 
-build_intro_video("H265 AAC"       25 1280  720  mp4 libx265    16:9 aac "-strict experimental")
+build_intro_video("H265 AAC"       25 1280  720  mp4 libx265    16:9 ${AAC_CODEC} "-strict experimental")
 
 # continue here with new formats
-#build_intro_video("WMV AAC"       25 1280  720  wmv libx264    16:9 aac ${NULL})
+#build_intro_video("WMV AAC"       25 1280  720  wmv libx264    16:9 ${AAC_CODEC} ${NULL})
 build_intro_video("WMV"           25 1280  720  wmv msmpeg4    16:9 wmav2        "-q:a 2 -q:v 2")
 
 #build_intro_video("MXF"            25 1280   720  mxf mpeg2video 4:3   ${NULL}     "-ar 48000 -ac 2")
 build_intro_video("MXF"            25 720   576  mxf mpeg2video 4:3  pcm_s16le   "-ar 48000 -ac 2")
 #build_intro_video("MXF"            25 1280  720  mxf mpeg2video 16:9 pcm_s16le   "-ar 48000 -ac 2")
 
-#build_intro_video("MOV AAC"       25 1280  720  mov libx264    16:9 aac ${NULL})
+#build_intro_video("MOV AAC"       25 1280  720  mov libx264    16:9 ${AAC_CODEC} ${NULL})
 
 endif()
 
