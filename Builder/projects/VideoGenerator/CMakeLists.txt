@@ -276,7 +276,7 @@ SET(vAspect -aspect ${pAspect})
 
 # Audio Setup
 #SET(AUDIO -c:a copy)
-#SET(AUDIO "-c:a libvo_aacenc -b:a 128k")
+#SET(AUDIO "-c:a aac -b:a 128k")
 SET(Audio "-shortest -c:a ${pAudio} -b:a 128k")
 if( ${pAudio} STREQUAL "${NULL}")
 	SET(Audio "-an")
@@ -443,7 +443,7 @@ if(PERL_FOUND)
 #	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
 #	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
 # concat:"intermediate1.mpg|intermediate2.mpg"
-#      COMMAND ffmpeg -y -f concat -i ${FontOverlayVideoGeneral_OUT} -i ${FontOverlayVideoVideo_OUT} -i ${FontOverlayVideoAudio_OUT} -i ${FontOverlayVideoText_OUT} -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
+#      COMMAND ffmpeg -y  -f concat -safe 0 -i ${FontOverlayVideoGeneral_OUT} -i ${FontOverlayVideoVideo_OUT} -i ${FontOverlayVideoAudio_OUT} -i ${FontOverlayVideoText_OUT} -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
       COMMAND ffmpeg -y -i concat:"${FontOverlayVideoGeneral_OUT}|${FontOverlayVideoVideo_OUT}|${FontOverlayVideoAudio_OUT}|${FontOverlayVideoText_OUT}" -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
 	  DEPENDS ${TextFileName} ${PlasmaVideo_OUTfname2} ${FontOverlayVideoGeneral_OUT} ${FontOverlayVideoVideo_OUT} ${FontOverlayVideoAudio_OUT} ${FontOverlayVideoText_OUT}
 	)
@@ -482,7 +482,8 @@ SET(OutroFname ${PROJECT_SOURCE_DIR}/Videos/Outro01.mp4)
 SET(OutroVideo_OUTfname "Outro-${VIDEO_TARGET}.${EXTENSION}")
 add_custom_command(
   OUTPUT ${OutroVideo_OUTfname}
-  COMMAND ffmpeg -y -i ${OutroFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${OutroVideo_OUTfname}
+  # Change: spit out ac3, ToDo: test this
+  COMMAND ffmpeg -y -i ${OutroFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a ac3 -movflags +faststart ${OutroVideo_OUTfname}
   DEPENDS ${TextFileName}
 )
 ADD_CUSTOM_TARGET(OutroVideo${TTarget} ALL DEPENDS  ${OutroVideo_OUTfname})
@@ -507,7 +508,7 @@ add_custom_command(
   OUTPUT ${VideoConcatVideo_OUT2}
   # This only works with some formats (MPEG-1, MPEG-2 PS, DV). 
   # see https://ffmpeg.org/faq.html#toc-Concatenating-using-the-concat-protocol-_0028file-level_0029
-  COMMAND ffmpeg -y -f concat -i ${VideoConcatTEXT_OUT} -c:v copy -an -movflags +faststart ${VideoConcatVideo_OUT2}
+  COMMAND ffmpeg -y -f concat -safe 0 -i ${VideoConcatTEXT_OUT} -c:v copy -an -movflags +faststart ${VideoConcatVideo_OUT2}
   DEPENDS ${FontOverlayVideo2_OUT} ${PROJECT_BINARY_DIR}/${VideoConcatTEXT_OUT} ${IntroVideo_OUTfname} ${OutroVideo_OUTfname} ${GenVideo_OUT}
 )
 ADD_CUSTOM_TARGET(VideoConcatVideo2${TTarget} ALL DEPENDS ${VideoConcatVideo_OUT2})
@@ -550,8 +551,8 @@ endif()
 #SET(VideoConcatVideo2_OUT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}X.${pEXTENSION}")
 #add_custom_command(
 #  OUTPUT ${VideoConcatVideo2_OUT}
-###  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v ${VCodec} ${Extra_Args} ${BITRATE} -c:a libvo_aacenc ${VideoConcatVideo2_OUT}
-#  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v copy -shortest -c:a libvo_aacenc ${VideoConcatVideo2_OUT}
+###  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v ${VCodec} ${Extra_Args} ${BITRATE} -c:a aac ${VideoConcatVideo2_OUT}
+#  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v copy -shortest -c:a aac ${VideoConcatVideo2_OUT}
 #  DEPENDS ${VideoConcatVideo_OUT}
 #)
 #ADD_CUSTOM_TARGET(VideoConcatVideoX${TTarget} ALL DEPENDS ${VideoConcatVideo2_OUT})
@@ -572,8 +573,8 @@ if(TRUE)
 foreach(Container mkv)
 #	foreach(LIB libx264 libxvid mpeg4)
 	foreach(LIB libx264)
-#		foreach(AUDIO libvo_aacenc libmp3lame)
-		foreach(AUDIO libvo_aacenc)
+#		foreach(AUDIO aac libmp3lame)
+		foreach(AUDIO aac)
 #			foreach(RESOLUTION "720;576" "1280;720")
 			foreach(RESOLUTION "1280;720")
 #				foreach(FPS 25 30 50 60)
@@ -591,70 +592,72 @@ foreach(Container mkv)
 endforeach(Container)
 endif()
 
-#build_intro_video("libtheora"          60 1280 720  avi libtheora 16:9 libvo_aacenc ${NULL})
-#build_intro_video("libvpx"          60 1280 720  avi libvpx 16:9 libvo_aacenc ${NULL})
-#build_intro_video("libvpx webm"          60 1280 720  webm libvpx 16:9 libvo_aacenc ${NULL})
-#build_intro_video("libx265 exp"          25 1280 720  mkv libx265 16:9 libvo_aacenc "-strict experimental")
-#build_intro_video("prores"          25 1280 720  mkv prores 16:9 libvo_aacenc ${NULL})
+#build_intro_video("libtheora"          60 1280 720  avi libtheora 16:9 aac ${NULL})
+#build_intro_video("libvpx"          60 1280 720  avi libvpx 16:9 aac ${NULL})
+#build_intro_video("libvpx webm"          60 1280 720  webm libvpx 16:9 aac ${NULL})
+#build_intro_video("libx265 exp"          25 1280 720  mkv libx265 16:9 aac "-strict experimental")
+#build_intro_video("prores"          25 1280 720  mkv prores 16:9 aac ${NULL})
 #build_intro_video("MPEG 1 Video"          25 1280 720  mpeg mpeg1video 16:9 libmp3lame ${NULL})
-#build_intro_video("Theora"          25 1280 720  avi libtheora 16:9 libvo_aacenc ${NULL})
+#build_intro_video("Theora"          25 1280 720  avi libtheora 16:9 aac ${NULL})
 
 if(TRUE)
 #build_intro_video("X264"          25 720  576  mkv libx264 16:9 ${NULL} ${NULL})
-#build_intro_video("X264 AAC"       25 720  576  mkv libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          25 720  576  mkv libx264 4:3 libvo_aacenc ${NULL})
-#build_intro_video("X264"          25 1280 720  mkv libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          30 720  576  mkv libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          30 1280 720  mkv libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          30 1920 1080 mp4 libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          50 1920 1080 mp4 libx264 16:9 libvo_aacenc ${NULL})
+#build_intro_video("X264 AAC"       25 720  576  mkv libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          25 720  576  mkv libx264 4:3 aac ${NULL})
+#build_intro_video("X264"          25 1280 720  mkv libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          30 720  576  mkv libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          30 1280 720  mkv libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          30 1920 1080 mp4 libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          50 1920 1080 mp4 libx264 16:9 aac ${NULL})
 
 #build_intro_video("MXF"       25 720   576  mxf mpeg2video 4:3 pcm_s16le "-ar 48000 -ac 2")
 #build_intro_video("MXF"       25 1280  720  mxf mpeg2video 16:9 pcm_s16le "-ar 48000 -ac 2")
 #build_intro_video("MXF"       25 1920  1080 mxf mpeg2video 16:9 pcm_s16le "-ar 48000 -ac 2")
 
 #
-##build_intro_video("X264"          30 720  576  mp4 libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          30 1024 768  mp4 libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          30 1280 720  mp4 libx264 16:9 libvo_aacenc ${NULL})
-#build_intro_video("X264"          30 1280 720  mp4 libx264 4:3 libvo_aacenc ${NULL})
+##build_intro_video("X264"          30 720  576  mp4 libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          30 1024 768  mp4 libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          30 1280 720  mp4 libx264 16:9 aac ${NULL})
+#build_intro_video("X264"          30 1280 720  mp4 libx264 4:3 aac ${NULL})
 #
-#build_intro_video("XVid"           30 720 576 mp4 libxvid 16:9 libvo_aacenc ${NULL})
-#build_intro_video("XVid"           30 1280 720 mp4 libxvid 16:9 libvo_aacenc ${NULL})
-#build_intro_video("XVid variable"  30 1280 720 mp4 libxvid 16:9 libvo_aacenc "-qscale:v 3")
+#build_intro_video("XVid"           30 720 576 mp4 libxvid 16:9 aac ${NULL})
+#build_intro_video("XVid"           30 1280 720 mp4 libxvid 16:9 aac ${NULL})
+#build_intro_video("XVid variable"  30 1280 720 mp4 libxvid 16:9 aac "-qscale:v 3")
 #
-#build_intro_video("mpeg4 native"   30 1280 720 avi mpeg4 16:9 libvo_aacenc ${NULL})
+#build_intro_video("mpeg4 native"   30 1280 720 avi mpeg4 16:9 aac ${NULL})
 #
-##build_intro_video("MPEG 2 Video"   30 720 576 mpg mpeg2video 16:9 libvo_aacenc ${NULL})
+##build_intro_video("MPEG 2 Video"   30 720 576 mpg mpeg2video 16:9 aac ${NULL})
 #build_intro_video("MPEG 2 Video"   30 720 576 mpg mpeg2video 16:9 libmp3lame ${NULL})
-#build_intro_video("MPEG 2 Video"   30 1280 720 mpg mpeg2video 16:9 libvo_aacenc ${NULL})
+#build_intro_video("MPEG 2 Video"   30 1280 720 mpg mpeg2video 16:9 aac ${NULL})
 #build_intro_video("MPEG 2 Video"   30 720 576 m2v mpeg2video 16:9 libmp3lame ${NULL})
 endif()
 
-#build_intro_video("X264"          25 800  600  mkv libx264 4:3 libvo_aacenc ${NULL})
-#build_intro_video("X264"           30 4096 2160 mp4 libx264 16:9 libvo_aacenc ${NULL})
+#build_intro_video("X264"          25 800  600  mkv libx264 4:3 aac ${NULL})
+#build_intro_video("X264"           30 4096 2160 mp4 libx264 16:9 aac ${NULL})
 
+# libvo_aacenc is obsolete, old and lower quality. use the build in aac codec.
 #common formats
 if(FALSE)
 build_intro_video("XVid var"       30 1280  720  mp4 libxvid    16:9 libmp3lame   "-qscale:v 3")
 build_intro_video("XVid var"       30 1280  720  mkv libxvid    16:9 libmp3lame   "-qscale:v 3")
 
-#build_intro_video("X264 AAC"       25 720   576  mkv libx264    4:3  libvo_aacenc ${NULL})
-build_intro_video("X264 AAC"       25 1280  720  mkv libx264    16:9 libvo_aacenc ${NULL})
+#build_intro_video("X264 AAC"       25 720   576  mkv libx264    4:3  aac ${NULL})
+# " Unsupported audio codec. Must be one of mp1, mp2, mp3, 16-bit pcm_dvd, pcm_s16be, ac3 or dts." -> build_intro_video("X264 AAC"       25 1280  720  mkv libx264    16:9 aac ${NULL})
+build_intro_video("X264 AAC"       25 1280  720  mkv libx264    16:9 ac3 ${NULL})
 
-#build_intro_video("X264 AAC"       25 1280  720  mp4 libx264    16:9 libvo_aacenc ${NULL})
+#build_intro_video("X264 AAC"       25 1280  720  mp4 libx264    16:9 aac ${NULL})
 
-build_intro_video("H265 AAC"       25 1280  720  mp4 libx265    16:9 libvo_aacenc "-strict experimental")
+build_intro_video("H265 AAC"       25 1280  720  mp4 libx265    16:9 aac "-strict experimental")
 
 # continue here with new formats
-#build_intro_video("WMV AAC"       25 1280  720  wmv libx264    16:9 libvo_aacenc ${NULL})
+#build_intro_video("WMV AAC"       25 1280  720  wmv libx264    16:9 aac ${NULL})
 build_intro_video("WMV"           25 1280  720  wmv msmpeg4    16:9 wmav2        "-q:a 2 -q:v 2")
 
 #build_intro_video("MXF"            25 1280   720  mxf mpeg2video 4:3   ${NULL}     "-ar 48000 -ac 2")
 build_intro_video("MXF"            25 720   576  mxf mpeg2video 4:3  pcm_s16le   "-ar 48000 -ac 2")
 #build_intro_video("MXF"            25 1280  720  mxf mpeg2video 16:9 pcm_s16le   "-ar 48000 -ac 2")
 
-#build_intro_video("MOV AAC"       25 1280  720  mov libx264    16:9 libvo_aacenc ${NULL})
+#build_intro_video("MOV AAC"       25 1280  720  mov libx264    16:9 aac ${NULL})
 
 endif()
 
