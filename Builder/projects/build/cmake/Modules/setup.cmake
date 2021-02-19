@@ -30,7 +30,7 @@ message(STATUS "Configuring ${PROJECT_NAME} for ${${PROJECT_NAME}_OS}-${${PROJEC
 if(${${PROJECT_NAME}_BITNESS} EQUAL 32)
 #	message(STATUS "32-bit build")
 	SET(CMAKE_SYSTEM_X86 TRUE)
-else(${${PROJECT_NAME}_BITNESS} EQUAL 64)
+elseif(${${PROJECT_NAME}_BITNESS} EQUAL 64)
 #	message(STATUS "64-bit build")
 	SET(CMAKE_SYSTEM_X64 TRUE)
 else()
