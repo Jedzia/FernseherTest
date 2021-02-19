@@ -235,6 +235,10 @@ FUNCTION(build_intro_video pTitle pFPS pWIDTH pHEIGTH pEXTENSION pVCodec pAspect
 separate_arguments(pExtra_Args)
 #SET(pExtra_Args ${pExtra_Args} -loglevel panic -hide_banner) # Debug
 
+# !!! IMPORTANT !!! Remove this if you want to see ffmpeg on stdout. For example when debugging.
+#SET(FFMPEG_QUIET -hide_banner -loglevel error)
+SET(FFMPEG_QUIET -hide_banner -loglevel fatal)
+
 SET(Video_SUBTITLE ${PROJECT_SOURCE_DIR}/Subtitles/colored-advanced.srt)
 
 # Setup
@@ -309,7 +313,7 @@ else()
 endif()
 add_custom_command(
   OUTPUT ${GenVideo_OUT}
-  COMMAND cat ${PROJECT_BINARY_DIR}/Op* | ffmpeg -y -framerate 1/5 -f image2pipe  -vcodec png -i - -vf ${vf_rescale} -vcodec ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -r ${FPS} ${GenVideo_OUT}
+  COMMAND cat ${PROJECT_BINARY_DIR}/Op* | ffmpeg ${FFMPEG_QUIET} -y -framerate 1/5 -f image2pipe  -vcodec png -i - -vf ${vf_rescale} -vcodec ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -r ${FPS} ${GenVideo_OUT}
   DEPENDS ${IMAGES_WORK_FILES}
 )
 ADD_CUSTOM_TARGET(GenVideo${TTarget} ALL DEPENDS ${GenVideo_OUT})
@@ -335,7 +339,7 @@ separate_arguments(ff_text)
 SET(FontOverlayVideo_OUT "${VIDEO_PREFIX2}_ovl.${EXTENSION}")
 add_custom_command(
   OUTPUT ${FontOverlayVideo_OUT}
-  COMMAND ffmpeg -y -i ${GenVideo_OUT} -vf \"${ff_box}, ${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${FontOverlayVideo_OUT}
+  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${GenVideo_OUT} -vf \"${ff_box}, ${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${FontOverlayVideo_OUT}
   DEPENDS ${GenVideo_OUT}
   COMMENT Build overlay text video
 )
@@ -348,23 +352,23 @@ SET(PlasmaVideo_OUTfname2 "Plasma-${VIDEO_TARGET}.tmp.${pEXTENSION}")
 #if(pEXTENSION MATCHES "mkv")
 #	add_custom_command(
 #	  OUTPUT ${PlasmaVideo_OUTfname} ${PlasmaVideo_OUTfname2}
-#	  COMMAND ffmpeg -y -i ${PlasmaFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${PlasmaVideo_OUTfname}
-#	  COMMAND ffmpeg -y -i ${PlasmaFname} -i ${Video_SUBTITLE} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${Audio} -movflags +faststart ${PlasmaVideo_OUTfname2}
+#	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${PlasmaVideo_OUTfname}
+#	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaFname} -i ${Video_SUBTITLE} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${Audio} -movflags +faststart ${PlasmaVideo_OUTfname2}
 #	  DEPENDS ${TextFileName}
 #	)
 #elseif(pEXTENSION MATCHES "mp4" OR pEXTENSION MATCHES "mov")
 if(pEXTENSION MATCHES "mp4" OR pEXTENSION MATCHES "mov")
 	add_custom_command(
 	  OUTPUT ${PlasmaVideo_OUTfname} ${PlasmaVideo_OUTfname2}
-	  COMMAND ffmpeg -y -i ${PlasmaFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${PlasmaVideo_OUTfname}
-	  COMMAND ffmpeg -y -i ${PlasmaFname} -i ${Video_SUBTITLE} -map 0:v -map 0:a -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${Audio} -map 1 -c:s:0 mov_text -metadata:s:s:0  language=en -shortest -movflags +faststart ${PlasmaVideo_OUTfname2}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${PlasmaVideo_OUTfname}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaFname} -i ${Video_SUBTITLE} -map 0:v -map 0:a -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${Audio} -map 1 -c:s:0 mov_text -metadata:s:s:0  language=en -shortest -movflags +faststart ${PlasmaVideo_OUTfname2}
 	  DEPENDS ${TextFileName}
 	)
 else()
 	add_custom_command(
 	  OUTPUT ${PlasmaVideo_OUTfname} ${PlasmaVideo_OUTfname2}
-	  COMMAND ffmpeg -y -i ${PlasmaFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${PlasmaVideo_OUTfname}
-	  COMMAND ffmpeg -y -i ${PlasmaFname} -i ${Video_SUBTITLE} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${Audio} -movflags +faststart ${PlasmaVideo_OUTfname2}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -an -movflags +faststart ${PlasmaVideo_OUTfname}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaFname} -i ${Video_SUBTITLE} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${Audio} -movflags +faststart ${PlasmaVideo_OUTfname2}
 	  DEPENDS ${TextFileName}
 	)
 endif()
@@ -397,7 +401,7 @@ if(PERL_FOUND)
 	SET(FontOverlayVideoGeneral_OUT "${VIDEO_PREFIX2}_ovlGeneral.${EXTENSION}")
 	add_custom_command(
 	  OUTPUT ${FontOverlayVideoGeneral_OUT}
-	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoGeneral_OUT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoGeneral_OUT}
 	  DEPENDS ${FontOverlayTEXTPerl_OUT} ${PlasmaVideo_OUTfname2}
 	)
 	ADD_CUSTOM_TARGET(FontOverlayVideoGeneral${TTarget} ALL DEPENDS ${PlasmaVideo_OUTfname} ${FontOverlayVideoGeneral_OUT})
@@ -410,7 +414,7 @@ if(PERL_FOUND)
 	SET(FontOverlayVideoVideo_OUT "${VIDEO_PREFIX2}_ovlVideo.${EXTENSION}")
 	add_custom_command(
 	  OUTPUT ${FontOverlayVideoVideo_OUT}
-	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoVideo_OUT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoVideo_OUT}
 	  DEPENDS ${FontOverlayTEXTPerl_OUT} ${PlasmaVideo_OUTfname2}
 	)
 	ADD_CUSTOM_TARGET(FontOverlayVideoVideo${TTarget} ALL DEPENDS ${PlasmaVideo_OUTfname} ${FontOverlayVideoVideo_OUT})
@@ -423,7 +427,7 @@ if(PERL_FOUND)
 	SET(FontOverlayVideoAudio_OUT "${VIDEO_PREFIX2}_ovlAudio.${EXTENSION}")
 	add_custom_command(
 	  OUTPUT ${FontOverlayVideoAudio_OUT}
-	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoAudio_OUT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoAudio_OUT}
 	  DEPENDS ${FontOverlayTEXTPerl_OUT} ${PlasmaVideo_OUTfname2}
 	)
 	ADD_CUSTOM_TARGET(FontOverlayVideoAudio${TTarget} ALL DEPENDS ${PlasmaVideo_OUTfname} ${FontOverlayVideoAudio_OUT})
@@ -436,7 +440,7 @@ if(PERL_FOUND)
 	SET(FontOverlayVideoText_OUT "${VIDEO_PREFIX2}_ovlText.${EXTENSION}")
 	add_custom_command(
 	  OUTPUT ${FontOverlayVideoText_OUT}
-	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoText_OUT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideoText_OUT}
 	  DEPENDS ${FontOverlayTEXTPerl_OUT} ${PlasmaVideo_OUTfname2}
 	)
 	ADD_CUSTOM_TARGET(FontOverlayVideoText${TTarget} ALL DEPENDS ${PlasmaVideo_OUTfname} ${FontOverlayVideoText_OUT})
@@ -450,11 +454,11 @@ if(PERL_FOUND)
 	SET(FontOverlayVideo2_OUT "${VIDEO_PREFIX2}_ovl2.${EXTENSION}")
 	add_custom_command(
 	  OUTPUT ${FontOverlayVideo2_OUT}
-#	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
-#	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
+#	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
+#	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
 # concat:"intermediate1.mpg|intermediate2.mpg"
-#      COMMAND ffmpeg -y  -f concat -safe 0 -i ${FontOverlayVideoGeneral_OUT} -i ${FontOverlayVideoVideo_OUT} -i ${FontOverlayVideoAudio_OUT} -i ${FontOverlayVideoText_OUT} -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
-      COMMAND ffmpeg -y -i concat:"${FontOverlayVideoGeneral_OUT}|${FontOverlayVideoVideo_OUT}|${FontOverlayVideoAudio_OUT}|${FontOverlayVideoText_OUT}" -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
+#      COMMAND ffmpeg ${FFMPEG_QUIET} -y  -f concat -safe 0 -i ${FontOverlayVideoGeneral_OUT} -i ${FontOverlayVideoVideo_OUT} -i ${FontOverlayVideoAudio_OUT} -i ${FontOverlayVideoText_OUT} -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
+      COMMAND ffmpeg ${FFMPEG_QUIET} -y -i concat:"${FontOverlayVideoGeneral_OUT}|${FontOverlayVideoVideo_OUT}|${FontOverlayVideoAudio_OUT}|${FontOverlayVideoText_OUT}" -c:v copy -an -movflags +faststart ${FontOverlayVideo2_OUT}
 	  DEPENDS ${TextFileName} ${PlasmaVideo_OUTfname2} ${FontOverlayVideoGeneral_OUT} ${FontOverlayVideoVideo_OUT} ${FontOverlayVideoAudio_OUT} ${FontOverlayVideoText_OUT}
 	)
 	ADD_CUSTOM_TARGET(FontOverlayVideo2${TTarget} ALL DEPENDS ${GenVideo${TTarget}} ${GenVideo_OUT} ${FontOverlayVideo2_OUT})
@@ -469,7 +473,7 @@ else()
 	SET(FontOverlayVideo2_OUT "${VIDEO_PREFIX2}_ovl2.${EXTENSION}")
 	add_custom_command(
 	  OUTPUT ${FontOverlayVideo2_OUT}
-	  COMMAND ffmpeg -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${PlasmaVideo_OUTfname} -vf \"${ff_text}, format=yuv420p\" -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${FontOverlayVideo2_OUT}
 	  DEPENDS ${TextFileName} ${PlasmaVideo_OUTfname2}
 	)
 	ADD_CUSTOM_TARGET(FontOverlayVideo2${TTarget} ALL DEPENDS ${GenVideo${TTarget}} ${GenVideo_OUT} ${FontOverlayVideo2_OUT})
@@ -482,7 +486,7 @@ SET(IntroFname ${PROJECT_SOURCE_DIR}/Videos/Intro01woAudio.mp4)
 SET(IntroVideo_OUTfname "Intro-${VIDEO_TARGET}.${EXTENSION}")
 add_custom_command(
   OUTPUT ${IntroVideo_OUTfname}
-  COMMAND ffmpeg -y -i ${IntroFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${IntroVideo_OUTfname}
+  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${IntroFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a copy -movflags +faststart ${IntroVideo_OUTfname}
   DEPENDS ${TextFileName}
 )
 ADD_CUSTOM_TARGET(IntroVideo${TTarget} ALL DEPENDS  ${IntroVideo_OUTfname})
@@ -493,7 +497,7 @@ SET(OutroVideo_OUTfname "Outro-${VIDEO_TARGET}.${EXTENSION}")
 add_custom_command(
   OUTPUT ${OutroVideo_OUTfname}
   # Change: spit out ac3, ToDo: test this
-  COMMAND ffmpeg -y -i ${OutroFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a ac3 -movflags +faststart ${OutroVideo_OUTfname}
+  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${OutroFname} -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${VCodec} ${vAspect} ${Extra_Args} ${BITRATE} -c:a ac3 -movflags +faststart ${OutroVideo_OUTfname}
   DEPENDS ${TextFileName}
 )
 ADD_CUSTOM_TARGET(OutroVideo${TTarget} ALL DEPENDS  ${OutroVideo_OUTfname})
@@ -518,7 +522,7 @@ add_custom_command(
   OUTPUT ${VideoConcatVideo_OUT2}
   # This only works with some formats (MPEG-1, MPEG-2 PS, DV). 
   # see https://ffmpeg.org/faq.html#toc-Concatenating-using-the-concat-protocol-_0028file-level_0029
-  COMMAND ffmpeg -y -f concat -safe 0 -analyzeduration 2147483647 -probesize 2147483647 -i ${VideoConcatTEXT_OUT} -c:v copy -an -movflags +faststart ${VideoConcatVideo_OUT2}
+  COMMAND ffmpeg ${FFMPEG_QUIET} -y -f concat -safe 0 -analyzeduration 2147483647 -probesize 2147483647 -i ${VideoConcatTEXT_OUT} -c:v copy -an -movflags +faststart ${VideoConcatVideo_OUT2}
   DEPENDS ${FontOverlayVideo2_OUT} ${PROJECT_BINARY_DIR}/${VideoConcatTEXT_OUT} ${IntroVideo_OUTfname} ${OutroVideo_OUTfname} ${GenVideo_OUT}
 )
 ADD_CUSTOM_TARGET(VideoConcatVideo2${TTarget} ALL DEPENDS ${VideoConcatVideo_OUT2})
@@ -532,7 +536,7 @@ add_custom_command(
   OUTPUT ${VideoConcatVideo_OUT}
   # This only works with some formats (MPEG-1, MPEG-2 PS, DV). 
   # see https://ffmpeg.org/faq.html#toc-Concatenating-using-the-concat-protocol-_0028file-level_0029
-  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT2} -shortest -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${pAudio} -movflags +faststart ${VideoConcatVideo_OUT}
+  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${Sound01} -i ${VideoConcatVideo_OUT2} -shortest -vf scale=${pWIDTH}:${pHEIGTH} -c:v ${pVCodec} ${vAspect} ${pExtra_Args} ${pBITRATE} ${pAudio} -movflags +faststart ${VideoConcatVideo_OUT}
   DEPENDS ${VideoConcatVideo_OUT2} ${Sound01}
 )
 ADD_CUSTOM_TARGET(VideoConcatVideo${TTarget} ALL DEPENDS ${VideoConcatVideo_OUT})
@@ -543,8 +547,8 @@ if(pEXTENSION MATCHES "mkv")
 	SET(VideoConcatVideo_SRT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}.srt.${pEXTENSION}")
 	add_custom_command(
 	  OUTPUT ${VideoConcatVideo_SRT}
-#	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 ${VideoConcatVideo_SRT}
-	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy ${VideoConcatVideo_SRT}
+#	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 ${VideoConcatVideo_SRT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy ${VideoConcatVideo_SRT}
 	  DEPENDS ${VideoConcatVideo_OUT} ${Video_SUBTITLE} 
 	  COMMENT Building final Video
 	)
@@ -554,8 +558,8 @@ elseif(pEXTENSION MATCHES "mp4" OR pEXTENSION MATCHES "mov")
 	SET(VideoConcatVideo_SRT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}.srt.${pEXTENSION}")
 	add_custom_command(
 	  OUTPUT ${VideoConcatVideo_SRT}
-#	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 ${VideoConcatVideo_SRT}
-	  COMMAND ffmpeg -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -map 0:v -map 0:a -c copy -map 1 -c:s:0 mov_text -metadata:s:s:0  language=en ${VideoConcatVideo_SRT}
+#	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -c:v copy -c:a copy -map 0:0 -map 0:1 -map 1:0 ${VideoConcatVideo_SRT}
+	  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${VideoConcatVideo_OUT} -i ${Video_SUBTITLE} -map 0:v -map 0:a -c copy -map 1 -c:s:0 mov_text -metadata:s:s:0  language=en ${VideoConcatVideo_SRT}
 	  DEPENDS ${VideoConcatVideo_OUT} ${Video_SUBTITLE} 
 	  COMMENT Building final Video
 	)
@@ -567,8 +571,8 @@ endif()
 #SET(VideoConcatVideo2_OUT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}X.${pEXTENSION}")
 #add_custom_command(
 #  OUTPUT ${VideoConcatVideo2_OUT}
-###  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v ${VCodec} ${Extra_Args} ${BITRATE} -c:a ${AAC_CODEC} ${VideoConcatVideo2_OUT}
-#  COMMAND ffmpeg -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v copy -shortest -c:a ${AAC_CODEC} ${VideoConcatVideo2_OUT}
+###  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v ${VCodec} ${Extra_Args} ${BITRATE} -c:a ${AAC_CODEC} ${VideoConcatVideo2_OUT}
+#  COMMAND ffmpeg ${FFMPEG_QUIET} -y -i ${Sound01} -i ${VideoConcatVideo_OUT} -c:v copy -shortest -c:a ${AAC_CODEC} ${VideoConcatVideo2_OUT}
 #  DEPENDS ${VideoConcatVideo_OUT}
 #)
 #ADD_CUSTOM_TARGET(VideoConcatVideoX${TTarget} ALL DEPENDS ${VideoConcatVideo2_OUT})
@@ -589,14 +593,15 @@ ENDFUNCTION()
 
 if(TRUE)
 #foreach(Container mkv mp4 avi)
+#foreach(Container mkv avi)
 foreach(Container mkv)
-#foreach(Container mkv)
-#	foreach(LIB libx264 libxvid mpeg4)
-	foreach(LIB libx264)
-#		foreach(AUDIO aac ac3 libmp3lame)
-		foreach(AUDIO aac)
+	foreach(LIB libx264 libxvid mpeg4)
+#	foreach(LIB libx264)
+		foreach(AUDIO aac ac3 libmp3lame)
+#		foreach(AUDIO aac)
 #			foreach(RESOLUTION "720;576" "1280;720" "1920;1080")
-			foreach(RESOLUTION "1280;720")
+			foreach(RESOLUTION "1920;1080")
+#			foreach(RESOLUTION "1280;720")
 #				foreach(FPS 25 30 50 60)
 				foreach(FPS 30)
 #					foreach(Aspect "16:9" "4:3")
