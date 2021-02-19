@@ -250,6 +250,7 @@ SET(AAC_CODEC aac)
 
 # Text band Title Setup
 SET(Title "${pTitle} ${pAspect} in ${pWIDTH}x${pHEIGTH} ${pFPS}fps") 
+string(REPLACE " " "_" USCORE_Title ${Title})
 # Todo: fix ${pVCodec}/${pAudio}, translate to human readable 
 SET(pVIDEO_TITLE "${pTitle} ${pVCodec}/${pAudio} ${pAspect} in ${pWIDTH}x${pHEIGTH} ${pFPS}fps als ${pEXTENSION}") 
 SET(Text ${pVIDEO_TITLE})
@@ -260,7 +261,12 @@ MESSAGE(STATUS "[IMGCONV-LIST] Text:     ${Text}")
 
 # file and target naming Setup 
 string(REPLACE ":" "t" Title ${Title})
+string(REPLACE ":" "t" fixedUSCORE_Title ${USCORE_Title})
 SET(VIDEO_PREFIX2 "${Title}_${EXTENSION}_${pVCodec}_${pAudio}") 
+#SET(VIDEO_PREFIX2 "${fixedUSCORE_Title}_${EXTENSION}_${pVCodec}_${pAudio}") 
+string(REPLACE ":" "t" dAspect ${pAspect})
+string(SUBSTRING ${Title} 0 1 short_title)
+SET(VIDEO_FINAL2 "${short_title}${dAspect}_${pWIDTH}x${pHEIGTH}_${pFPS}fps_${EXTENSION}_${pVCodec}_${pAudio}") 
 SET(VIDEO_TARGET "${Title}_${pEXTENSION}_${pVCodec}_${pAudio}") 
 string(REPLACE " " "_" TTarget ${VIDEO_TARGET})
 
@@ -322,7 +328,8 @@ endif()
 
 ### overlay text video
 fix_ffmpeg_path("${PROJECT_SOURCE_DIR}/Fonts/The_X-Files.ttf" Font)
-set(ff_box "drawbox=y=ih/PHI/0.86:color=black@0.5:width=iw:height=ih/PHI/3.6:t=max")
+#set(ff_box "drawbox=y=ih/PHI/0.86:color=black@0.5:width=iw:height=ih/PHI/3.6:t=max")
+set(ff_box "drawbox=y=ih/PHI/0.86:color=black@0.5:width=iw:height=ih/PHI/3.6")
 set(ff_text "drawtext=fontfile='${Font}':text='${Text}':fontcolor=white:fontsize=${FontsizeBox}:x=\(w-tw\)/2:y=\(h/PHI/0.9\)+th")
 separate_arguments(ff_text)
 SET(FontOverlayVideo_OUT "${VIDEO_PREFIX2}_ovl.${EXTENSION}")
@@ -518,6 +525,8 @@ ADD_CUSTOM_TARGET(VideoConcatVideo2${TTarget} ALL DEPENDS ${VideoConcatVideo_OUT
 
 #final video 
 get_random_soundfile(Sound01)
+#set(Sound01 "E:/Shared/Musi/Metallica - 1989 - Damaged Justice Tour'89/CD2/14 - Metallica - Last Caress_[plixid.com].mp3")
+# short title SET(VideoConcatVideo_OUT "${PROJECT_BINARY_DIR}/../${VIDEO_FINAL2}.${pEXTENSION}")
 SET(VideoConcatVideo_OUT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}.${pEXTENSION}")
 add_custom_command(
   OUTPUT ${VideoConcatVideo_OUT}
@@ -530,6 +539,7 @@ ADD_CUSTOM_TARGET(VideoConcatVideo${TTarget} ALL DEPENDS ${VideoConcatVideo_OUT}
 
 # add subtitles
 if(pEXTENSION MATCHES "mkv")
+#	SET(VideoConcatVideo_SRT "${PROJECT_BINARY_DIR}/../${VIDEO_FINAL2}.srt.${pEXTENSION}")
 	SET(VideoConcatVideo_SRT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}.srt.${pEXTENSION}")
 	add_custom_command(
 	  OUTPUT ${VideoConcatVideo_SRT}
@@ -540,6 +550,7 @@ if(pEXTENSION MATCHES "mkv")
 	)
 	ADD_CUSTOM_TARGET(VideoConcatVideoSRT${TTarget} ALL DEPENDS ${VideoConcatVideo_SRT})
 elseif(pEXTENSION MATCHES "mp4" OR pEXTENSION MATCHES "mov")
+#	SET(VideoConcatVideo_SRT "${PROJECT_BINARY_DIR}/../${VIDEO_FINAL2}.srt.${pEXTENSION}")
 	SET(VideoConcatVideo_SRT "${PROJECT_BINARY_DIR}/../${VIDEO_PREFIX2}.srt.${pEXTENSION}")
 	add_custom_command(
 	  OUTPUT ${VideoConcatVideo_SRT}
@@ -573,17 +584,21 @@ ENDFUNCTION()
 
 # not valid build_intro_video("Cisco openh264"          25 1280 720  mp4 libopenh264 ${NULL})
 
+#build_intro_video("V"       30 1280  720  mkv libx264    16:9 libmp3lame   ${NULL})
+#return()
+
 if(TRUE)
 #foreach(Container mkv mp4 avi)
 foreach(Container mkv)
+#foreach(Container mkv)
 #	foreach(LIB libx264 libxvid mpeg4)
 	foreach(LIB libx264)
-#		foreach(AUDIO ${AAC_CODEC} libmp3lame)
-		foreach(AUDIO ac3)
-#			foreach(RESOLUTION "720;576" "1280;720")
+#		foreach(AUDIO aac ac3 libmp3lame)
+		foreach(AUDIO aac)
+#			foreach(RESOLUTION "720;576" "1280;720" "1920;1080")
 			foreach(RESOLUTION "1280;720")
 #				foreach(FPS 25 30 50 60)
-				foreach(FPS 30 )
+				foreach(FPS 30)
 #					foreach(Aspect "16:9" "4:3")
 					foreach(Aspect "16:9")
 		#				#build_intro_video("X264"          ${FPS} 720  576  mkv libx264 16:9 ${NULL})
